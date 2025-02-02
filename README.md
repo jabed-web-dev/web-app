@@ -5,7 +5,7 @@
 > **All the code is in `tauri-app_mod.rs` with information.**
 
 ### Run and Build this app
-`cargo run -- --url http://localhost:500 -w 400 -w 740`\
+`cargo run -- --url http://localhost:5000 -w 400 -w 740`\
 `cargo build --release`
 
 \
