@@ -1,4 +1,4 @@
-// File location: .cargo/registry/src/index.crates.io-xyz.../
+// File location: ~/.cargo/registry/src/index.crates.io-xyz.../
 
 // add all file -> use std::env;
 // file: tauri-2.2.5/src/manager/mod.rs
@@ -18,6 +18,27 @@ pub(crate) fn get_url(&self, https: bool) -> Cow<'_, Url> {
     }
   }
 
+  // Check for --file or -f
+  if let Some(index) = args.iter().position(|arg| arg == "--file" || arg == "-f") {
+    if let Some(file_arg) = args.get(index + 1) {
+      let path = std::path::Path::new(file_arg);
+      match path.canonicalize() {
+        Ok(abs_path) => {
+          let file_url = Url::from_file_path(abs_path);
+          match file_url {
+            Ok(url) => {
+              return Cow::Owned(url)
+            },
+            Err(_) => println!("Failed to convert file path to URL: {}", file_arg),
+          }
+        }
+        Err(e) => println!("Error resolving file path: {}", e),
+      }
+    } else {
+      eprintln!("--file or -f argument provided without a value.");
+    }
+  }
+  
   // Fallback if no URL is provided via command-line arguments
   match self.base_path() {
     Some(url) => Cow::Borrowed(url),
@@ -209,6 +230,7 @@ fn theme(mut self, theme: Option<Theme>) -> Self {
 
 /* 
 --url          -u
+--file         -f
 --title        -t
 --width        -w
 --height       -h
