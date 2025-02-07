@@ -26,7 +26,6 @@
 --ontop      | -ot    | false
 --devtools   | -dt    | false
 --fullscreen | -fs    | false
-|||
 
 <br>
 
